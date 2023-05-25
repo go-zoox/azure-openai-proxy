@@ -53,12 +53,12 @@ func main() {
 			&cli.StringFlag{
 				Name:    "embeddings-resource",
 				Usage:   "Embeddings Resource",
-				EnvVars: []string{"EMBEDDINGS_RESOURCE"},
+				EnvVars: []string{"EMBEDDING_RESOURCE"},
 			},
 			&cli.StringFlag{
 				Name:    "embeddings-deployment",
 				Usage:   "Embeddings Deployment",
-				EnvVars: []string{"EMBEDDINGS_DEPLOYMENT"},
+				EnvVars: []string{"EMBEDDING_DEPLOYMENT"},
 			},
 		},
 	})
