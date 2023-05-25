@@ -40,4 +40,4 @@ RUN server --version
 
 ENV VERSION=${VERSION}
 
-CMD server server
+CMD server
