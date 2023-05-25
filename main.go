@@ -6,8 +6,8 @@ import (
 
 func main() {
 	app := cli.NewSingleProgram(&cli.SingleProgramConfig{
-		Name:    "chatgpt-for-chatbot-feishu",
-		Usage:   "chatgpt-for-chatbot-feishu is a portable chatgpt server",
+		Name:    "azure-openai-proxy",
+		Usage:   "azure-openai-proxy is a portable chatgpt server",
 		Version: Version,
 		Flags: []cli.Flag{
 			&cli.IntFlag{
