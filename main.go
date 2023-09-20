@@ -41,14 +41,24 @@ func main() {
 				Value:   "2023-03-15-preview",
 			},
 			&cli.StringFlag{
-				Name:    "chat-completion-resource",
-				Usage:   "Chat-completion Resource",
-				EnvVars: []string{"CHAT_COMPLETION_RESOURCE"},
+				Name:    "chat-completion-resource-for-gpt35",
+				Usage:   "Chat-completion Resource (GPT-3.5)",
+				EnvVars: []string{"CHAT_COMPLETION_RESOURCE_FOR_GPT35"},
 			},
 			&cli.StringFlag{
-				Name:    "chat-completion-deployment",
-				Usage:   "Chat-completion Deployment",
-				EnvVars: []string{"CHAT_COMPLETION_DEPLOYMENT"},
+				Name:    "chat-completion-deployment-for-gpt35",
+				Usage:   "Chat-completion Deployment (GPT-3.5)",
+				EnvVars: []string{"CHAT_COMPLETION_DEPLOYMENT_FOR_GPT35"},
+			},
+			&cli.StringFlag{
+				Name:    "chat-completion-resource-for-gpt4",
+				Usage:   "Chat-completion Resource (GPT-4)",
+				EnvVars: []string{"CHAT_COMPLETION_RESOURCE_FOR_GPT4"},
+			},
+			&cli.StringFlag{
+				Name:    "chat-completion-deployment-for-gpt4",
+				Usage:   "Chat-completion Deployment (GPT-4)",
+				EnvVars: []string{"CHAT_COMPLETION_DEPLOYMENT_FOR_GPT4"},
 			},
 			&cli.StringFlag{
 				Name:    "embeddings-resource",
@@ -70,12 +80,22 @@ func main() {
 			AuthToken:  ctx.String("auth-token"),
 			APIKey:     ctx.String("api-key"),
 			APIVersion: ctx.String("api-version"),
-			Models: Models{
-				ChatCompletions: Model{
-					Resource:   ctx.String("chat-completion-resource"),
-					Deployment: ctx.String("chat-completion-deployment"),
+			APIs: APIs{
+				ChatCompletions: Models{
+					"gpt-3.5": ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt35"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt35"),
+					},
+					"gpt-3.5-turbo": ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt35"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt35"),
+					},
+					"gpt-4": ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt4"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt4"),
+					},
 				},
-				Embeddings: Model{
+				Embeddings: ModelResource{
 					Resource:   ctx.String("embeddings-resource"),
 					Deployment: ctx.String("embeddings-deployment"),
 				},

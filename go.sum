@@ -101,6 +101,8 @@ github.com/go-zoox/kv v1.5.1/go.mod h1:u/IbVscKbZk4AyDvvnsK9DiaWshH/Nz3twlGDRyC9
 github.com/go-zoox/logger v1.2.0/go.mod h1:mBImRV6zpbGtiIjDz/C9vWi80wWc2OTOl9N9P0SAJgk=
 github.com/go-zoox/logger v1.4.4 h1:050xlOkXfslwGuR57B0rA+toSXUo4UQqRCsyTw2n0UQ=
 github.com/go-zoox/logger v1.4.4/go.mod h1:o7ddvv/gMoMa0TomPhHoIz11ZWRbQ92pF6rwYbOY3iQ=
+github.com/go-zoox/openai-client v1.4.3 h1:nnk1krN2Pvb9xzlxVN9/UVPpJ/Pt4XqFtXvCcHqmHmw=
+github.com/go-zoox/openai-client v1.4.3/go.mod h1:h6vfyPajS1ScdALzDb+CwcSiMH3WKqScma0qH+SlRF8=
 github.com/go-zoox/proxy v1.2.3/go.mod h1:T+gbngAtIgvambbYibAbzrjwdu8j5pduJdA2j6RYi94=
 github.com/go-zoox/proxy v1.4.0 h1:vGY3/SxONBgVCdJ2bvpIlGyINnEHP/Cq5Dt2QWYxw94=
 github.com/go-zoox/proxy v1.4.0/go.mod h1:HAVpVmXgniKNMHRwgtiKNxh9YgYnduAzUFe1fpVHVjo=
