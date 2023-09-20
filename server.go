@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"strings"
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/headers"
 	"github.com/go-zoox/logger"
+	openaiclient "github.com/go-zoox/openai-client"
 
 	"github.com/go-zoox/proxy"
 	"github.com/go-zoox/zoox"
@@ -20,15 +22,19 @@ type Config struct {
 	AuthToken  string
 	APIKey     string
 	APIVersion string
-	Models     Models
+	APIs       APIs
 }
 
-type Models struct {
-	ChatCompletions Model
-	Embeddings      Model
+type APIs struct {
+	ChatCompletions Models
+	Embeddings      ModelResource
 }
 
-type Model struct {
+type Models map[ModelName]ModelResource
+
+type ModelName string
+
+type ModelResource struct {
 	Resource   string
 	Deployment string
 }
@@ -47,11 +53,30 @@ func Server(cfg *Config) error {
 		{
 			path := "/chat/completions"
 			r.Post(path, func(ctx *zoox.Context) {
+				body, err := ctx.CloneBody()
+				if err != nil {
+					ctx.Error(500, fmt.Sprintf("failed to clone body: %s", err))
+					return
+				}
+
+				data := &openaiclient.CreateChatCompletionRequest{}
+				if err := json.NewDecoder(body).Decode(data); err != nil {
+					ctx.Error(500, fmt.Sprintf("failed to parse body: %s", err))
+					return
+				}
+
+				modelName := data.Model
+				model, ok := cfg.APIs.ChatCompletions[ModelName(modelName)]
+				if !ok {
+					ctx.Error(500, fmt.Sprintf("unsupport model: %s", modelName))
+					return
+				}
+
 				zoox.WrapH(proxy.New(&proxy.Config{
 					OnRequest: func(req, originReq *http.Request) error {
 						req.URL.Scheme = "https"
-						req.URL.Host = fmt.Sprintf("%s.openai.azure.com", cfg.Models.ChatCompletions.Resource)
-						req.URL.Path = fmt.Sprintf("/openai/deployments/%s%s", cfg.Models.ChatCompletions.Deployment, path)
+						req.URL.Host = fmt.Sprintf("%s.openai.azure.com", model.Resource)
+						req.URL.Path = fmt.Sprintf("/openai/deployments/%s%s", model.Deployment, path)
 						req.Host = req.URL.Host
 
 						originQuery := req.URL.Query()
@@ -82,8 +107,8 @@ func Server(cfg *Config) error {
 			r.Post(path, zoox.WrapH(proxy.New(&proxy.Config{
 				OnRequest: func(req, originReq *http.Request) error {
 					req.URL.Scheme = "https"
-					req.URL.Host = fmt.Sprintf("%s.openai.azure.com", cfg.Models.Embeddings.Resource)
-					req.URL.Path = fmt.Sprintf("/openai/deployments/%s%s", cfg.Models.Embeddings.Deployment, path)
+					req.URL.Host = fmt.Sprintf("%s.openai.azure.com", cfg.APIs.Embeddings.Resource)
+					req.URL.Path = fmt.Sprintf("/openai/deployments/%s%s", cfg.APIs.Embeddings.Deployment, path)
 					req.Host = req.URL.Host
 
 					originQuery := req.URL.Query()
