@@ -8,7 +8,6 @@ import (
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/headers"
 	"github.com/go-zoox/logger"
-	openaiclient "github.com/go-zoox/openai-client"
 
 	"github.com/go-zoox/proxy"
 	"github.com/go-zoox/zoox"
@@ -55,19 +54,38 @@ func Server(cfg *Config) error {
 			r.Post(path, func(ctx *zoox.Context) {
 				body, err := ctx.CloneBody()
 				if err != nil {
+					ctx.Logger.Errorf("failed to clone body: %s", err)
 					ctx.Error(500, fmt.Sprintf("failed to clone body: %s", err))
 					return
 				}
 
-				data := &openaiclient.CreateChatCompletionRequest{}
-				if err := json.NewDecoder(body).Decode(data); err != nil {
+				// data := &openaiclient.CreateChatCompletionRequest{}
+				data := map[string]any{}
+				if err := json.NewDecoder(body).Decode(&data); err != nil {
+					ctx.Logger.Errorf("failed to parse body: %s", err)
 					ctx.Error(500, fmt.Sprintf("failed to parse body: %s", err))
 					return
 				}
 
-				modelName := data.Model
+				modelNameX, ok := data["model"]
+				if !ok {
+					ctx.Logger.Errorf("missing model")
+					ctx.Error(500, "missing model")
+					return
+				}
+
+				modelName, ok := modelNameX.(string)
+				if !ok {
+					ctx.Logger.Errorf("modelName is not string")
+					ctx.Error(500, "modelName is not string")
+					return
+				}
+				ctx.Logger.Infof("[model] %s", modelName)
+				ctx.Logger.Debugf("[model] %#v", data)
+
 				model, ok := cfg.APIs.ChatCompletions[ModelName(modelName)]
 				if !ok {
+					ctx.Logger.Errorf("unsupport model: %s", modelName)
 					ctx.Error(500, fmt.Sprintf("unsupport model: %s", modelName))
 					return
 				}
@@ -88,7 +106,7 @@ func Server(cfg *Config) error {
 						req.Header.Set(headers.Origin, fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host))
 						req.Header.Set("api-key", cfg.APIKey)
 
-						logger.Infof("[proxy] %s -> %s", originReq.URL, req.URL.String())
+						ctx.Logger.Infof("[proxy] %s -> %s", originReq.URL, req.URL.String())
 
 						return nil
 					},
