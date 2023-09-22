@@ -54,7 +54,7 @@ func Server(cfg *Config) error {
 			r.Post(path, func(ctx *zoox.Context) {
 				body, err := ctx.CloneBody()
 				if err != nil {
-					ctx.Logger.Errorf("failed to clone body: %s", err)
+					ctx.Logger.Errorf("[chat/completions] failed to clone body: %s", err)
 					ctx.Error(500, fmt.Sprintf("failed to clone body: %s", err))
 					return
 				}
@@ -62,30 +62,30 @@ func Server(cfg *Config) error {
 				// data := &openaiclient.CreateChatCompletionRequest{}
 				data := map[string]any{}
 				if err := json.NewDecoder(body).Decode(&data); err != nil {
-					ctx.Logger.Errorf("failed to parse body: %s", err)
+					ctx.Logger.Errorf("[chat/completions] failed to parse body: %s", err)
 					ctx.Error(500, fmt.Sprintf("failed to parse body: %s", err))
 					return
 				}
+				ctx.Logger.Debugf("[chat/completions] raw: %s", toJSON(data))
 
 				modelNameX, ok := data["model"]
 				if !ok {
-					ctx.Logger.Errorf("missing model")
+					ctx.Logger.Errorf("[chat/completions] missing model(data: %s)", toJSON(data))
 					ctx.Error(500, "missing model")
 					return
 				}
 
 				modelName, ok := modelNameX.(string)
 				if !ok {
-					ctx.Logger.Errorf("modelName is not string")
+					ctx.Logger.Errorf("[chat/completions] modelName is not string (data: %s)", toJSON(data))
 					ctx.Error(500, "modelName is not string")
 					return
 				}
-				ctx.Logger.Infof("[model] %s", modelName)
-				ctx.Logger.Debugf("[model] %#v", data)
+				ctx.Logger.Infof("[chat/completions] model: %s", modelName)
 
 				model, ok := cfg.APIs.ChatCompletions[ModelName(modelName)]
 				if !ok {
-					ctx.Logger.Errorf("unsupport model: %s", modelName)
+					ctx.Logger.Errorf("[chat/completions] unsupport model: %s", modelName)
 					ctx.Error(500, fmt.Sprintf("unsupport model: %s", modelName))
 					return
 				}
@@ -106,7 +106,7 @@ func Server(cfg *Config) error {
 						req.Header.Set(headers.Origin, fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host))
 						req.Header.Set("api-key", cfg.APIKey)
 
-						ctx.Logger.Infof("[proxy] %s -> %s", originReq.URL, req.URL.String())
+						ctx.Logger.Infof("[chat/completions][proxy] %s -> %s", originReq.URL, req.URL.String())
 
 						return nil
 					},
@@ -138,7 +138,7 @@ func Server(cfg *Config) error {
 					req.Header.Set(headers.Origin, fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host))
 					req.Header.Set("api-key", cfg.APIKey)
 
-					logger.Infof("[proxy] %s -> %s", originReq.URL, req.URL.String())
+					logger.Infof("[embeddings][proxy] %s -> %s", originReq.URL, req.URL.String())
 
 					return nil
 				},
@@ -147,4 +147,14 @@ func Server(cfg *Config) error {
 	})
 
 	return app.Run(fmt.Sprintf(":%d", cfg.Port))
+}
+
+// @TODO
+func toJSON(v any) string {
+	j, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return fmt.Sprintf("failed to toJSON: %#v", v)
+	}
+
+	return string(j)
 }
