@@ -90,6 +90,10 @@ func main() {
 						Resource:   ctx.String("chat-completion-resource-for-gpt35"),
 						Deployment: ctx.String("chat-completion-deployment-for-gpt35"),
 					},
+					"gpt-3.5-turbo-16k": ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt35"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt35"),
+					},
 					"gpt-4": ModelResource{
 						Resource:   ctx.String("chat-completion-resource-for-gpt4"),
 						Deployment: ctx.String("chat-completion-deployment-for-gpt4"),
