@@ -1,4 +1,4 @@
-module github.com/go-zoox/openai-proxy
+module github.com/go-zoox/azure-openai-proxy
 
 go 1.20
 
