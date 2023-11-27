@@ -8,10 +8,10 @@ type Config struct {
 }
 
 type APIs struct {
-	ChatCompletions   Models
-	Embeddings        ModelResource
-	ImagesGenerations ModelResource
-	ImagesEdits       ModelResource
+	ChatCompletion  Models
+	Embedding       ModelResource
+	ImageGeneration ModelResource
+	ImageEdit       ModelResource
 }
 
 type Models map[ModelName]ModelResource

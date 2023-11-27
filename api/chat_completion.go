@@ -44,7 +44,7 @@ func ChatCompletions(path string, cfg *config.Config) zoox.HandlerFunc {
 		}
 		ctx.Logger.Infof("[chat/completions] model: %s", modelName)
 
-		model, ok := cfg.APIs.ChatCompletions[config.ModelName(modelName)]
+		model, ok := cfg.APIs.ChatCompletion[config.ModelName(modelName)]
 		if !ok {
 			ctx.Logger.Errorf("[chat/completions] unsupport model: %s", modelName)
 			ctx.Error(500, fmt.Sprintf("unsupport model: %s", modelName))
