@@ -12,6 +12,7 @@ type APIs struct {
 	Embedding       ModelResource
 	ImageGeneration ModelResource
 	ImageEdit       ModelResource
+	ImageVariation  ModelResource
 }
 
 type Models map[ModelName]ModelResource

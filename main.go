@@ -141,6 +141,26 @@ func main() {
 				Usage:   "Image Edits API Key",
 				EnvVars: []string{"IMAGE_EDIT_API_KEY"},
 			},
+			&cli.StringFlag{
+				Name:    "image-variation-resource",
+				Usage:   "Image Variation Resource",
+				EnvVars: []string{"IMAGE_EDIT_RESOURCE"},
+			},
+			&cli.StringFlag{
+				Name:    "image-variation-deployment",
+				Usage:   "Image Variation Deployment",
+				EnvVars: []string{"IMAGE_EDIT_DEPLOYMENT"},
+			},
+			&cli.StringFlag{
+				Name:    "image-variation-api-version",
+				Usage:   "Image Variation API Version",
+				EnvVars: []string{"IMAGE_EDIT_API_VERSION"},
+			},
+			&cli.StringFlag{
+				Name:    "image-variation-api-key",
+				Usage:   "Image Variation API Key",
+				EnvVars: []string{"IMAGE_EDIT_API_KEY"},
+			},
 		},
 	})
 
@@ -193,6 +213,12 @@ func main() {
 					Deployment: ctx.String("image-edit-deployment"),
 					APIVersion: ctx.String("image-edit-api-version"),
 					APIKey:     ctx.String("image-edit-api-key"),
+				},
+				ImageVariation: config.ModelResource{
+					Resource:   ctx.String("image-variation-resource"),
+					Deployment: ctx.String("image-variation-deployment"),
+					APIVersion: ctx.String("image-variation-api-version"),
+					APIKey:     ctx.String("image-variation-api-key"),
 				},
 			},
 		}

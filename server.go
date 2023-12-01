@@ -44,6 +44,10 @@ func Server(cfg *config.Config) error {
 				path := "/images/edits"
 				r.Any(path, api.ImagesEdits(path, cfg))
 			}
+			{
+				path := "/images/variations"
+				r.Any(path, api.ImagesVariations(path, cfg))
+			}
 		}
 	})
 

@@ -28,7 +28,7 @@ func ImagesEdits(path string, cfg *config.Config) zoox.HandlerFunc {
 			req.Header.Set(headers.Origin, fmt.Sprintf("%s://%s", req.URL.Scheme, req.URL.Host))
 			req.Header.Set("api-key", cfg.APIs.ImageEdit.APIKey)
 
-			logger.Infof("[image_edits][proxy] %s -> %s", originReq.URL, req.URL.String())
+			logger.Infof("[image_edit][proxy] %s -> %s", originReq.URL, req.URL.String())
 
 			return nil
 		},

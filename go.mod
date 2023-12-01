@@ -7,7 +7,6 @@ require (
 	github.com/go-zoox/core-utils v1.2.14
 	github.com/go-zoox/headers v1.0.8
 	github.com/go-zoox/logger v1.4.5
-	github.com/go-zoox/openai-client v1.4.3
 	github.com/go-zoox/proxy v1.5.3
 	github.com/go-zoox/zoox v1.12.7
 )
