@@ -195,6 +195,24 @@ func main() {
 						APIVersion: ctx.String("chat-completion-api-version-for-gpt4"),
 						APIKey:     ctx.String("chat-completion-api-key-for-gpt4"),
 					},
+					"gpt-4-turbo": config.ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt4"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt4"),
+						APIVersion: ctx.String("chat-completion-api-version-for-gpt4"),
+						APIKey:     ctx.String("chat-completion-api-key-for-gpt4"),
+					},
+					"gpt-4-1106-preview": config.ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt4"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt4"),
+						APIVersion: ctx.String("chat-completion-api-version-for-gpt4"),
+						APIKey:     ctx.String("chat-completion-api-key-for-gpt4"),
+					},
+					"gpt-4-32k": config.ModelResource{
+						Resource:   ctx.String("chat-completion-resource-for-gpt4"),
+						Deployment: ctx.String("chat-completion-deployment-for-gpt4"),
+						APIVersion: ctx.String("chat-completion-api-version-for-gpt4"),
+						APIKey:     ctx.String("chat-completion-api-key-for-gpt4"),
+					},
 				},
 				Embedding: config.ModelResource{
 					Resource:   ctx.String("embedding-resource"),
