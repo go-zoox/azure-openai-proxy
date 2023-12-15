@@ -16,7 +16,7 @@ func ChatCompletions(path string, cfg *config.Config) zoox.HandlerFunc {
 		body, err := ctx.CloneBody()
 		if err != nil {
 			ctx.Logger.Errorf("[chat/completions] failed to clone body: %s", err)
-			ctx.Error(500, fmt.Sprintf("failed to clone body: %s", err))
+			ctx.Error(http.StatusInternalServerError, fmt.Sprintf("failed to clone body: %s", err))
 			return
 		}
 
@@ -24,7 +24,7 @@ func ChatCompletions(path string, cfg *config.Config) zoox.HandlerFunc {
 		data := map[string]any{}
 		if err := json.NewDecoder(body).Decode(&data); err != nil {
 			ctx.Logger.Errorf("[chat/completions] failed to parse body: %s", err)
-			ctx.Error(500, fmt.Sprintf("failed to parse body: %s", err))
+			ctx.Error(http.StatusInternalServerError, fmt.Sprintf("failed to parse body: %s", err))
 			return
 		}
 		ctx.Logger.Debugf("[chat/completions] raw: %s", toJSON(data))
@@ -32,14 +32,20 @@ func ChatCompletions(path string, cfg *config.Config) zoox.HandlerFunc {
 		modelNameX, ok := data["model"]
 		if !ok {
 			ctx.Logger.Errorf("[chat/completions] missing model(data: %s)", toJSON(data))
-			ctx.Error(500, "missing model")
+			ctx.JSON(http.StatusBadRequest, zoox.H{
+				"code":    400001,
+				"message": fmt.Sprintf("missing model (data: %s)", toJSON(data)),
+			})
 			return
 		}
 
 		modelName, ok := modelNameX.(string)
 		if !ok {
 			ctx.Logger.Errorf("[chat/completions] modelName is not string (data: %s)", toJSON(data))
-			ctx.Error(500, "modelName is not string")
+			ctx.JSON(http.StatusBadRequest, zoox.H{
+				"code":    400002,
+				"message": fmt.Sprintf("modelName is not string (data: %s)", toJSON(data)),
+			})
 			return
 		}
 		ctx.Logger.Infof("[chat/completions] model: %s", modelName)
@@ -47,7 +53,11 @@ func ChatCompletions(path string, cfg *config.Config) zoox.HandlerFunc {
 		model, ok := cfg.APIs.ChatCompletion[config.ModelName(modelName)]
 		if !ok {
 			ctx.Logger.Errorf("[chat/completions] unsupport model: %s", modelName)
-			ctx.Error(500, fmt.Sprintf("unsupport model: %s", modelName))
+
+			ctx.JSON(http.StatusBadRequest, zoox.H{
+				"code":    400003,
+				"message": fmt.Sprintf("unsupport model: %s", modelNameX),
+			})
 			return
 		}
 
